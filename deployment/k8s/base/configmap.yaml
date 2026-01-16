@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-api-config
+data:
+  # Model selection (non-secret)
+  MLFLOW_MODEL_NAME: "CHANGE_ME_MODEL_NAME"
+  MLFLOW_MODEL_ALIAS: "prod"
+
+  # App config (non-secret)
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"
+  APP_ENV: "k8s"
+  LOAD_MODEL_ON_STARTUP: "true"

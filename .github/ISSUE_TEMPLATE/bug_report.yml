@@ -1,0 +1,126 @@
+name: "Bug report"
+description: "Report a bug or regression."
+title: "[Bug]: "
+labels:
+  - bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug.
+
+        **Do not include secrets** (API keys, tokens, passwords, private URLs).
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the bug.
+      placeholder: Training crashes at epoch 1 when loading data...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How impactful is this issue?
+      options:
+        - low (minor annoyance)
+        - medium (workaround exists)
+        - high (blocks normal usage)
+        - critical (data loss/security/major outage)
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce the issue?
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro_command
+    attributes:
+      label: Reproduction command (Hydra/CLI)
+      description: |
+        Provide the exact command you ran, including Hydra overrides if any.
+      placeholder: |
+        python -m src.project_slug.core.train model=... data=... trainer=...
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_lineage
+    attributes:
+      label: Data / lineage (if applicable)
+      description: |
+        If the issue relates to data or pipelines, provide the dataset identifier and versioning context.
+      placeholder: |
+        - data.name: ...
+        - data.path: ...
+        - DVC used: yes/no
+        - DVC data_path: ...
+        - dvc.lock changed: yes/no/unknown
+        - dataset digest/version (if known): ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / recordings
+      description: If applicable, add screenshots or recordings to help explain the problem.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Which version or commit are you using?
+      placeholder: v1.2.3 or 123abc4
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: System details (OS, Python, GPU, etc.).
+      placeholder: |
+        - OS: Ubuntu 22.04
+        - Python: 3.12.x
+        - CUDA: 12.x (if applicable)
+        - GPU: RTX 4070 (if applicable)
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste any relevant logs or stack traces.
+      render: shell

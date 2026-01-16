@@ -1,0 +1,14 @@
+# config/trainer/base.yaml
+_target_: pytorch_lightning.Trainer
+
+max_epochs: 10
+accelerator: auto
+devices: 1
+precision: "32"
+log_every_n_steps: 50
+enable_checkpointing: true
+enable_progress_bar: true
+
+# Compose callbacks from a separate group (recommended)
+defaults:
+  - callbacks: base

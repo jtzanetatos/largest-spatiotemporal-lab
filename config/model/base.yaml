@@ -1,0 +1,18 @@
+# Canonical model configuration for this project (Hydra: model=base)
+
+# Stable identifier for logging, run directories, checkpoints, MLflow naming/tags
+name: "CHANGE_ME_model_name"
+
+# Hydra instantiation target
+# Prefer instantiating a LightningModule (recommended) or a pure nn.Module.
+_target_: spatiotemporal_lab.models.MyModel  # CHANGE_ME
+
+# Model hyperparameters (example placeholders)
+hidden_dim: 256
+num_layers: 2
+dropout: 0.1
+
+# Optimization-related hyperparameters (optional, but common)
+# If you prefer, these can be moved into an optimizer group later.
+lr: 1e-3
+weight_decay: 0.0

@@ -1,0 +1,87 @@
+name: "Task"
+description: "Track work items that are not bugs or feature requests."
+title: "[Task]: "
+labels:
+  - chore
+
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the task.
+      placeholder: Refactor training entrypoint to separate data/module construction...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: What part of the repo does this touch?
+      options:
+        - code (src/)
+        - configs (Hydra)
+        - data / DVC
+        - tracking / MLflow
+        - deployment
+        - tests
+        - docs
+        - CI / tooling
+        - other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - low
+        - medium
+        - high
+        - critical
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Details about the work to be done.
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: When is this task considered done?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: config_impact
+    attributes:
+      label: Config / reproducibility impact (optional)
+      description: Does this affect Hydra configs, experiment presets, tracking, or data lineage?
+      placeholder: |
+        - Hydra configs impacted: yes/no
+        - MLflow impacted: yes/no
+        - DVC impacted: yes/no
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Link any related issues, PRs, or external dependencies.
+      placeholder: |
+        - #123
+        - External service X
+    validations:
+      required: false

@@ -1,0 +1,22 @@
+# Canonical logging configuration (Hydra: logging=base)
+# Intended for loguru-first logging with optional stdlib->loguru bridging.
+
+backend: loguru
+level: INFO
+
+console:
+  enabled: true
+
+file:
+  enabled: true
+  # Stable location at repo root (safe with hydra.job.chdir=true)
+  path: ${paths.logs_dir}/${project.name}.log
+  rotation: "50 MB"
+  retention: "10 days"
+  compression: "zip"
+
+# Bridge stdlib logging (Hydra/Lightning/dependencies) into loguru sinks.
+bridge_stdlib: true
+
+# Capture Python warnings into stdlib logging (then bridged to loguru).
+capture_warnings: true

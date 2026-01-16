@@ -1,0 +1,141 @@
+# .woodpecker.yml
+when:
+  - event: pull_request
+  - event: tag
+  - event: manual
+
+steps:
+  # --------------------------------------
+  # CI: lint + tests for PRs into main
+  # --------------------------------------
+  - name: ci
+    image: python:3.13
+    when:
+      - event: pull_request
+        branch: main
+    commands:
+      - python -m pip install --upgrade pip
+      - pip install uv
+
+      # Create/sync env (dev group is included by default by uv sync)
+      - |
+        if [ -f uv.lock ]; then
+          uv sync --frozen
+        else
+          uv sync
+        fi
+
+      # Lint/format (Ruff)
+      - uv run ruff check .
+      - uv run ruff format --check .
+
+      # Optional: codespell (if present in dev group)
+      - |
+        if uv run codespell --version >/dev/null 2>&1; then
+          uv run codespell
+        else
+          echo "codespell not installed; skipping."
+        fi
+
+      # Tests (template-friendly: treat "no tests collected" as success)
+      - |
+        if find tests -name "test_*.py" -o -name "*_test.py" 2>/dev/null | grep -q .; then
+          echo "Running pytest..."
+          set +e
+          uv run pytest
+          exit_code=$?
+          if [ "$exit_code" -eq 5 ]; then
+            echo "pytest: no tests collected (exit code 5). Treating as success for template."
+            exit 0
+          else
+            exit "$exit_code"
+          fi
+        else
+          echo "No test files found; skipping pytest."
+        fi
+
+  # --------------------------------------
+  # CD: MLflow -> Triton export + promote
+  # - tag push  -> automatic promotion
+  # - manual    -> fallback/special cases
+  # --------------------------------------
+  - name: promote-model
+    image: python:3.13
+    when:
+      - event: tag
+        branch: main
+      - event: manual
+    environment:
+      # Prefer secrets for opsec
+      MLFLOW_TRACKING_URI:
+        from_secret: mlflow_tracking_uri
+
+      # If MLflow uses S3 artifact store
+      MLFLOW_S3_ENDPOINT_URL:
+        from_secret: mlflow_s3_endpoint_url
+      MLFLOW_S3_IGNORE_TLS: "true"
+
+      AWS_ACCESS_KEY_ID:
+        from_secret: mlflow_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: mlflow_s3_secret_key
+
+      # Registered MLflow model name (set per repo)
+      MODEL_NAME: my_registered_model
+
+      # Lifecycle alias to set after successful export
+      MODEL_ALIAS: prod
+
+      # Optional: enable Triton max_batch_size only when >1
+      # (None/1 => no batching)
+      TRITON_BATCH: "1"
+
+      # Optional: override Triton model directory name (defaults to MODEL_NAME)
+      # TRITON_MODEL_NAME: my_triton_name
+    commands:
+      - python -m pip install --upgrade pip
+      - pip install uv
+
+      # Minimal deps for export+promotion (no full project install required)
+      # If you prefer, you can switch this to `uv sync --group mlops` etc.
+      - uv pip install mlflow typer loguru onnx skl2onnx torch
+
+      - |
+        # Determine MLflow model version.
+        if [ "$CI_PIPELINE_EVENT" = "tag" ]; then
+          # e.g. tag 'v7' -> version '7'
+          VERSION="${CI_COMMIT_TAG#v}"
+        else
+          # Manual run: allow MODEL_VERSION override
+          if [ -z "${MODEL_VERSION:-}" ]; then
+            echo "Manual promotion: MODEL_VERSION not set; defaulting to 1"
+            VERSION="1"
+          else
+            VERSION="$MODEL_VERSION"
+          fi
+        fi
+
+        # Basic sanity
+        case "$VERSION" in
+          ''|*[!0-9]*)
+            echo "ERROR: VERSION must be numeric (got: '$VERSION')"
+            exit 1
+            ;;
+        esac
+
+        echo "Exporting and promoting MLflow model '$MODEL_NAME' version '$VERSION' to alias '$MODEL_ALIAS'..."
+
+        # Build batch flag only if >1
+        BATCH_FLAG=""
+        if [ "${TRITON_BATCH:-1}" -gt 1 ]; then
+          BATCH_FLAG="--batch ${TRITON_BATCH}"
+        fi
+
+        python deployment/scripts/promote_and_export_to_triton.py promote-and-export \
+          --model-name "$MODEL_NAME" \
+          --version "$VERSION" \
+          --alias "$MODEL_ALIAS" \
+          --output-dir deployment/triton/model_repository \
+          ${BATCH_FLAG}
+
+        echo "Done."

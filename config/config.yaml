@@ -1,0 +1,68 @@
+# Main Hydra configuration entry point.
+# Wires together config groups and defines project-wide settings shared across tools.
+
+defaults:
+  # Core config groups
+  - data: base
+  - model: base
+  - trainer: base
+  - logging: base
+  - mlflow: base
+
+  # Optional: named experiment preset (set via CLI, e.g. experiment=baseline)
+  - experiment: null
+
+  # Keep _self_ last so values defined below override those from included configs.
+  - _self_
+
+# --------------------------------------------------------------------
+# Project-wide settings (customize per repo)
+# --------------------------------------------------------------------
+
+project:
+  name: "spatiotemporal_lab"
+  env: "local" # local | dev | prod
+
+seed: 42
+debug: false
+
+# CLI behaviour (used by entrypoints for sanity prints)
+cli:
+  print_header: true # short summary: project/model/data/seed/env
+  print_config: false # full resolved config (verbose)
+  print_paths: false
+
+# --------------------------------------------------------------------
+# Canonical paths (anchored at repo root; safe with hydra.job.chdir=true)
+# --------------------------------------------------------------------
+
+paths:
+  repo_root: ${hydra:runtime.original_cwd}
+
+  data_dir: ${paths.repo_root}/data
+  logs_dir: ${paths.repo_root}/logs
+
+  checkpoints_root: ${paths.repo_root}/checkpoints
+  checkpoints_dir: ${paths.checkpoints_root}/${model.name}
+
+  models_dir: ${paths.repo_root}/deployment/models
+
+  outputs_root: ${paths.repo_root}/outputs
+  multirun_root: ${paths.repo_root}/multirun
+
+# --------------------------------------------------------------------
+# Hydra behaviour (run directories, sweeps, cwd)
+# --------------------------------------------------------------------
+
+hydra:
+  run:
+    # Model-aware run directories with timestamps
+    dir: ${paths.outputs_root}/${model.name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+  sweep:
+    dir: ${paths.multirun_root}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+
+  job:
+    # Run inside hydra.run.dir
+    chdir: true

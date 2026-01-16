@@ -1,0 +1,12 @@
+# Canonical, reproducible baseline recipe for comparisons and iteration.
+
+defaults:
+  - _self_
+
+debug: false
+seed: 42
+
+# Training-time intent only (does not control registry lifecycle)
+mlflow:
+  tags:
+    lifecycle_intent: staging

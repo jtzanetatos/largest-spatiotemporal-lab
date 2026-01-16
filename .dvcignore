@@ -1,0 +1,42 @@
+# Ignore Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore notebooks checkpoints
+.ipynb_checkpoints/
+
+# Ignore virtual environments
+venv/
+.venv/
+env/
+.env
+
+# Ignore temporary editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore deployment artifacts
+deployment/triton/model_repo/
+deployment/models/
+
+# Ignore logs
+logs/
+*.log
+*.err
+*.out
+
+# Ignore intermediate ML artifacts
+checkpoints/
+artifacts/
+models/
+
+# Ignore DVC cache directories created during operations
+.dvc/tmp/

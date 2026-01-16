@@ -1,0 +1,46 @@
+# Canonical dataset configuration for this project (Hydra: data=base)
+
+# Stable dataset identifier (used in logs/MLflow tags/CLI sanity prints)
+name: "CHANGE_ME_dataset_name"
+
+# Root dataset location used by the data loader
+# Prefer repo-root anchored paths via ${paths.data_dir}
+path: ${paths.data_dir}/processed/CHANGE_ME_dataset_name
+
+# Optional loader hint (interpreted by your code)
+# Examples: parquet | csv | zarr | imagefolder | webdataset | hdf5
+format: null
+
+# Optional split specification.
+# - If null/absent: loader decides how to load splits from `path`.
+# - If set: loader uses these references (relative to `path` unless absolute).
+splits: null
+# splits:
+#   train: "train.parquet"
+#   val: "val.parquet"
+#   test: "test.parquet"
+
+# Optional split/index metadata (useful for image classification or custom datasets).
+# Examples:
+# - a CSV listing sample paths + split labels
+# - a class mapping file
+# Keep null unless your pipeline produces these.
+index: null
+# index:
+#   split_file: ${paths.data_dir}/processed/CHANGE_ME_dataset_name/splits.csv
+#   classmap_file: ${paths.data_dir}/processed/CHANGE_ME_dataset_name/class_to_idx.json
+
+# Loader parameters (interpreted by your code / DataModule)
+batch_size: 64
+num_workers: 4
+shuffle: true
+pin_memory: true
+persistent_workers: true
+
+# DVC metadata (stage-free): identifiers only.
+# Runtime code can resolve and log exact versions/hashes to MLflow.
+dvc:
+  enabled: true
+  data_path: "data/processed/CHANGE_ME_dataset_name"   # repo-relative path corresponding to `path`
+  # Optional: track additional dataset metadata separately if relevant
+  metadata_path: null

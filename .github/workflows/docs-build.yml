@@ -1,0 +1,70 @@
+name: Docs and Build
+
+on:
+  push:
+    paths:
+      - "mkdocs.yml"
+      - "mkdocs.yaml"
+      - "docs/**"
+      - "pyproject.toml"
+      - ".github/workflows/docs-build.yml"
+  pull_request:
+    paths:
+      - "mkdocs.yml"
+      - "mkdocs.yaml"
+      - "docs/**"
+      - "pyproject.toml"
+      - ".github/workflows/docs-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  docs-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect docs builder
+        id: detect
+        shell: bash
+        run: |
+          if [ -f "mkdocs.yml" ] || [ -f "mkdocs.yaml" ]; then
+            echo "builder=mkdocs" >> "$GITHUB_OUTPUT"
+          elif [ -f "docs/conf.py" ]; then
+            echo "builder=sphinx" >> "$GITHUB_OUTPUT"
+          else
+            echo "builder=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install uv
+        if: steps.detect.outputs.builder != 'none'
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Sync dependencies (locked)
+        if: steps.detect.outputs.builder != 'none'
+        run: |
+          if [ "${{ steps.detect.outputs.builder }}" = "mkdocs" ]; then
+            uv sync --group dev --group docs-mkdocs
+          elif [ "${{ steps.detect.outputs.builder }}" = "sphinx" ]; then
+            uv sync --group dev --group docs-sphinx
+          fi
+
+      - name: Build documentation
+        if: steps.detect.outputs.builder != 'none'
+        run: |
+          if [ "${{ steps.detect.outputs.builder }}" = "mkdocs" ]; then
+            uv run mkdocs build --strict
+          elif [ "${{ steps.detect.outputs.builder }}" = "sphinx" ]; then
+            uv run sphinx-build -b html docs docs/_build -W
+          fi
+
+      - name: Package build check
+        if: steps.detect.outputs.builder != 'none'
+        run: |
+          uv build

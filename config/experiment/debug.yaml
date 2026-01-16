@@ -1,0 +1,18 @@
+# Fast, minimal run for sanity checks and quick iteration.
+
+defaults:
+  - override /trainer: fast_dev
+  - _self_
+
+debug: true
+
+# Training-time intent only (does not control registry lifecycle)
+mlflow:
+  tags:
+    lifecycle_intent: dev
+
+# Optional: make debug runs cheaper/cleaner (toggle as you prefer)
+mlflow:
+  enabled: false
+logging:
+  level: DEBUG

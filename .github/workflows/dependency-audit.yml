@@ -1,0 +1,37 @@
+name: Dependency Audit
+
+on:
+  schedule:
+    # Weekly, gentle scan – adjust as desired
+    - cron: "0 4 * * 1" # Monday 04:00 UTC
+  workflow_dispatch: # Allow manual runs from the UI
+
+permissions:
+  contents: read
+
+jobs:
+  pip-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Sync dependencies (runtime + dev)
+        run: |
+          # Installs [project].dependencies + [dependency-groups].dev
+          uv sync --group dev
+
+      - name: Run pip-audit
+        run: |
+          # Audits the installed environment (resolved via uv.lock)
+          # If vulnerabilities are found, this job will fail.
+          # Because this workflow is scheduled-only, it won't block PRs
+          # unless you explicitly add it to branch protection.
+          uv run pip-audit

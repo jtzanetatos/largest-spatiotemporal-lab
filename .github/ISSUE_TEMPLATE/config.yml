@@ -1,0 +1,19 @@
+# Allow users to open a free-form issue when none of the templates fit
+blank_issues_enabled: true
+
+contact_links:
+  - name: Questions, usage help, and design discussions
+    url: https://github.com/<OWNER>/<REPO>/discussions
+    about: >
+      Ask questions, discuss usage, experiments, or design decisions here.
+      Please do not open issues for general questions.
+
+  - name: Documentation
+    url: https://github.com/<OWNER>/<REPO>/docs
+    about: >
+      Check the documentation before filing a bug or feature request.
+
+  - name: Security issues
+    url: https://github.com/<OWNER>/<REPO>/security/policy
+    about: >
+      Report security vulnerabilities privately. Do not open a public issue.

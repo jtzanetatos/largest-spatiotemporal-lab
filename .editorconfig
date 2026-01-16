@@ -1,0 +1,75 @@
+# .editorconfig
+# EditorConfig helps maintain consistent coding styles across editors and IDEs.
+# This template is tailored for Python, ML/DS workflows, notebooks, configs, and docs.
+
+root = true
+
+# -------------------------------------------------------------------
+# Default settings (apply to all files)
+# -------------------------------------------------------------------
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# -------------------------------------------------------------------
+# Markdown / Documentation
+# - Keep trailing whitespace (for intentional line breaks)
+# -------------------------------------------------------------------
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# -------------------------------------------------------------------
+# YAML / JSON (configs & CI files)
+# YAML: 2-space indentation is standard
+# -------------------------------------------------------------------
+[*.{yml,yaml,json}]
+indent_size = 2
+
+# -------------------------------------------------------------------
+# TOML (pyproject.toml, configs)
+# -------------------------------------------------------------------
+[*.toml]
+indent_size = 2
+
+# -------------------------------------------------------------------
+# Python
+# - Black enforces 4-space indent and 88 char lines
+# - EditorConfig won’t override Black, but helps in editors
+# -------------------------------------------------------------------
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+# -------------------------------------------------------------------
+# Jupyter Notebooks (metadata only)
+# - EditorConfig doesn't affect notebook content,
+#   but this avoids stray whitespace in JSON structure when edited raw
+# -------------------------------------------------------------------
+[*.ipynb]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+# -------------------------------------------------------------------
+# Shell scripts
+# -------------------------------------------------------------------
+[*.sh]
+indent_style = space
+indent_size = 2
+
+# -------------------------------------------------------------------
+# Dockerfiles
+# -------------------------------------------------------------------
+[Dockerfile]
+indent_style = space
+indent_size = 2
+
+# -------------------------------------------------------------------
+# Makefiles (require tabs)
+# -------------------------------------------------------------------
+[Makefile]
+indent_style = tab

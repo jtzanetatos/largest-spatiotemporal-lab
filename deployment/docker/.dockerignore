@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+.dist/
+.build/
+.venv/
+venv/
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Git
+.git/
+.gitignore
+
+# Project outputs
+outputs/
+multirun/
+checkpoints/
+logs/
+mlruns/
+
+# Data (never bake data into the image)
+data/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Docs build
+site/

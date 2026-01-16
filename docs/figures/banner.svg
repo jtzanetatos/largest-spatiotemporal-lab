@@ -1,0 +1,77 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid-dark" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#334155" stroke-width="1" opacity="0.3"/>
+    </pattern>
+    <pattern id="grid-light" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+    </pattern>
+
+    <linearGradient id="cyber-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f3e600"/> <stop offset="100%" stop-color="#ff003c"/> </linearGradient>
+
+    <style>
+      /* Font Stack: Monospace for that coding feel */
+      text { font-family: 'Courier New', Courier, monospace, system-ui; }
+      
+      /* Dark Mode Defaults */
+      .bg-rect { fill: #050505; }
+      .grid-fill { fill: url(#grid-dark); }
+      .text-primary { fill: #f3e600; text-shadow: 0 0 5px rgba(243, 230, 0, 0.4); }
+      .text-secondary { fill: #00f0ff; }
+      .text-desc { fill: #9ca3af; }
+      .panel-stroke { stroke: #333; }
+      .panel-fill { fill: #0f172a; }
+
+      /* Light Mode Overrides */
+      @media (prefers-color-scheme: light) {
+        .bg-rect { fill: #f8fafc; }
+        .grid-fill { fill: url(#grid-light); }
+        .text-primary { fill: #0f172a; text-shadow: none; } /* Black for contrast */
+        .text-secondary { fill: #dc2626; } /* Red for industrial alert */
+        .text-desc { fill: #475569; }
+        .panel-stroke { stroke: #cbd5e1; }
+        .panel-fill { fill: #ffffff; }
+      }
+
+      .glitch-bar { animation: glitch 3s infinite; }
+      @keyframes glitch {
+        0% { opacity: 1; }
+        95% { opacity: 1; }
+        96% { opacity: 0; }
+        98% { opacity: 1; }
+        99% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" class="bg-rect"/>
+  <rect width="100%" height="100%" class="grid-fill"/>
+
+  <path d="M 100 60 L 1100 60 L 1100 200 L 1080 220 L 100 220 L 80 200 L 80 80 Z" 
+        class="panel-fill panel-stroke" stroke-width="2" />
+  
+  <path d="M 60 60 L 70 60 L 70 220 L 60 220 Z" fill="#f3e600" opacity="0.8"/>
+  <path d="M 40 80 L 50 80 L 50 200 L 40 200 Z" fill="#00f0ff" opacity="0.6"/>
+
+  <text x="120" y="110" font-size="42" font-weight="bold" letter-spacing="2" class="text-primary">
+    LargeST Spatiotemporal Lab
+  </text>
+  
+  <text x="120" y="150" font-size="18" class="text-desc">
+    > INITIALIZING NEURAL LINK... 
+    > DIGITAL TWIN SYNC: [READY]
+  </text>
+
+  <text x="120" y="200" font-size="14" font-weight="bold" class="text-secondary">
+    [PYTHON] :: [PYTORCH] :: [DOCKER] :: [KUBERNETES]
+  </text>
+
+  <g transform="translate(950, 90)">
+    <rect x="0" y="0" width="100" height="5" fill="#f3e600" class="glitch-bar"/>
+    <rect x="0" y="10" width="80" height="5" fill="#f3e600" opacity="0.6"/>
+    <rect x="0" y="20" width="40" height="5" fill="#f3e600" opacity="0.3"/>
+    <text x="0" y="50" font-size="10" fill="#f3e600" opacity="0.8">SYS.STATUS: OPTIMAL</text>
+  </g>
+</svg>

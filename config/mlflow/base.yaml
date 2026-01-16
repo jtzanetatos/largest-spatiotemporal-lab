@@ -1,0 +1,61 @@
+# Canonical MLflow configuration (Hydra: mlflow=base)
+
+# Enable/disable MLflow tracking for this run
+enabled: true
+
+# Tracking URI:
+# - "file:/..." for local tracking
+# - "http://host:5000" for a remote tracking server
+# (Equivalent to setting MLFLOW_TRACKING_URI)
+tracking_uri: ${oc.env:MLFLOW_TRACKING_URI,null}
+
+# Experiment naming policy: project-level by default
+experiment_name: ${project.name}
+
+# Run naming policy: model-level by default
+run_name: ${model.name}
+
+# Standard run tags (runtime may add dynamic tags like git SHA / DVC / dataset digest)
+tags:
+  project: ${project.name}
+  env: ${project.env}
+  model_name: ${model.name}
+  data_name: ${data.name}
+  debug: ${debug}
+
+  # Optional: intent at training time (does NOT control deployment).
+  # The actual lifecycle for deployments is controlled via registry aliases below.
+  lifecycle_intent: dev
+
+# Optional logging behaviors (implemented in code)
+log_config_as_artifact: true     # log resolved Hydra config YAML to MLflow
+log_datasets: true               # log dataset metadata/digest when available
+log_checkpoints: false           # upload checkpoints as artifacts (can be expensive)
+
+# Optional autolog controls (if you choose to enable MLflow autolog in code)
+autolog:
+  enabled: false
+  # framework: "pytorch" | "sklearn" | "xgboost" | etc. (interpreted by runtime code)
+  framework: null
+
+# Model Registry / lifecycle management via aliases (preferred over deprecated stages)
+registry:
+  enabled: true
+
+  # Registered model name in MLflow Model Registry.
+  # Project-level by default. If you want per-model registries, use "${project.name}.${model.name}".
+  model_name: ${project.name}
+
+  # Lifecycle vocabulary (aliases). Deploy using: models:/<model_name>@prod, etc.
+  aliases:
+    dev: dev
+    staging: staging
+    prod: prod
+    archived: archived
+
+  # Governance policy (enforced in code/CI): at most ONE lifecycle alias per model version.
+  lifecycle_exclusive: true
+
+  # Policy knobs for runtime code:
+  assign_alias_on_register: dev   # set alias on newly registered versions (or null for manual)
+  allow_archived_deploy: false    # prevent resolving @archived for deployment paths

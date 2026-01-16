@@ -1,0 +1,16 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    image: ${IMAGE_NAME:-ml-template-api}:latest
+    ports:
+      - "${API_PORT:-8000}:8000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - api_cache:/app/.mlflow
+
+volumes:
+  api_cache:

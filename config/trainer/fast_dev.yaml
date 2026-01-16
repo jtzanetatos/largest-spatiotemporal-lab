@@ -1,0 +1,15 @@
+# Fast development / smoke-test trainer configuration
+# Intended for quick iteration and CI sanity checks.
+
+_target_: pytorch_lightning.Trainer
+
+# Lightning built-in fast dev mode (runs a very small number of batches)
+fast_dev_run: true
+
+# Safe defaults (CPU) for portability; override via CLI if desired.
+accelerator: cpu
+devices: 1
+
+# Keep logs concise
+enable_progress_bar: true
+log_every_n_steps: 1

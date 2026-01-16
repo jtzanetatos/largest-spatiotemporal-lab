@@ -1,0 +1,44 @@
+name: Type Check
+
+on:
+  push:
+    paths:
+      - "**.py"
+      - "pyproject.toml"
+      - ".github/workflows/type-check.yml"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "${{ matrix.python-version }}"
+          enable-cache: true
+
+      - name: Sync dependencies (runtime + dev)
+        run: |
+          # Installs [project].dependencies + [dependency-groups].dev
+          # mypy must be in the `dev` group in pyproject.toml
+          uv sync --group dev
+
+      - name: Run mypy
+        run: |
+          targets="src"
+          if find tests -type f \( -name "*.py" -o -name "*.pyi" \) | grep -q .; then
+            targets="$targets tests"
+          fi
+          echo "mypy targets: $targets"
+          uv run mypy $targets

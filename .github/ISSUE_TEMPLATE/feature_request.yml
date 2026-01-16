@@ -1,0 +1,101 @@
+name: "Feature request"
+description: "Suggest a new feature or enhancement."
+title: "[Feature]: "
+labels:
+  - enhancement
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature.
+
+        Please describe the *problem first*, then the proposed solution.
+        Feature requests should be actionable and scoped.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the feature.
+      placeholder: Add configurable data validation step before training...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope / intent
+      description: What kind of change is this?
+      options:
+        - research / experimentation
+        - production feature
+        - developer experience / tooling
+        - performance / optimization
+        - documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem statement
+      description: |
+        What problem does this feature solve?
+        Who is affected and why is the current behavior insufficient?
+      placeholder: |
+        Currently, ...
+        This causes ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior or capability you would like to see.
+      placeholder: |
+        I propose that the system...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe alternative solutions or approaches you've considered.
+      placeholder: |
+        Alternative A...
+        Alternative B...
+    validations:
+      required: false
+
+  - type: textarea
+    id: config_impact
+    attributes:
+      label: Configuration / reproducibility impact
+      description: |
+        Does this affect Hydra configs, experiment presets, or reproducibility?
+      placeholder: |
+        - New config group or variant needed: yes/no
+        - Changes to existing configs: ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: mlflow_impact
+    attributes:
+      label: Tracking / MLflow impact
+      description: |
+        Does this affect tracking, metrics, artifacts, or model lifecycle?
+      placeholder: |
+        - New metrics/artifacts: ...
+        - Registry or lifecycle impact: ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any other context, links, or references here.

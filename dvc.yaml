@@ -1,0 +1,38 @@
+# dvc.yaml
+#
+# Minimal, accurate DVC pipeline stub aligned with this template:
+# - Hydra is the canonical runner (src/<spatiotemporal_lab>/cli/train.py)
+# - DVC stages use deterministic output dirs (no timestamps) by overriding Hydra
+#
+# This file is OPTIONAL. Keep it only if you actively use DVC pipelines.
+
+stages:
+  train:
+    desc: "Train via Hydra entrypoint (deterministic run dir for DVC)."
+    cmd: >
+      python -m spatiotemporal_lab.cli.train
+      hydra.run.dir=outputs/dvc/train
+      hydra.job.chdir=false
+    deps:
+      - config/
+      - src/spatiotemporal_lab/
+      - pyproject.toml
+      - data/README.md
+    outs:
+      - outputs/dvc/train
+
+  evaluate:
+    desc: "Offline evaluation (optional hook)."
+    cmd: >
+      python -m spatiotemporal_lab.cli.train
+      evaluation.enabled=true
+      hydra.run.dir=outputs/dvc/evaluate
+      hydra.job.chdir=false
+    deps:
+      - config/
+      - src/spatiotemporal_lab/
+      - pyproject.toml
+      - data/README.md
+      - outputs/dvc/train
+    outs:
+      - outputs/dvc/evaluate
