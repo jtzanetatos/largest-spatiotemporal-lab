@@ -30,7 +30,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "{{ cookiecutter.python_version }}"
+          python-version: "3.13"
           enable-cache: true
 
       - name: DVC doctor
