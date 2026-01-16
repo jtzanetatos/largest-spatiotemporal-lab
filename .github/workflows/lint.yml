@@ -22,24 +22,18 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.13"
+          python-version: "{{ cookiecutter.python_version }}"
           # Optional but recommended for speed:
           enable-cache: true
 
-      - name: Sync dependencies (runtime + dev)
-        run: |
-          # Installs [project].dependencies + [dependency-groups].dev
-          # No extras (gpu, notebooks, etc.) are installed by default.
-          uv sync --group dev
-
       - name: Ruff (lint + format check)
         run: |
-          uv run ruff check . --output-format=github
-          uv run ruff format --check .
+          uv run --with ruff ruff check . --output-format=github
+          uv run --with ruff ruff format --check .
 
       - name: Codespell
         run: |
-          uv run codespell \
+          uv run --with codespell codespell \
             --ignore-words-list="nd,teh,fo" \
             --skip=".git,.venv,venv,.mypy_cache,.pytest_cache,.dvc,.idea,.vscode,*.ipynb,*.png,*.jpg,*.jpeg,*.svg,*.ico,models,artifacts,data" \
             .
