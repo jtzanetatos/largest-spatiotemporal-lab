@@ -36,10 +36,15 @@ stages:
     - outputs/dvc/train
     outs:
     - outputs/dvc/evaluate
-  
+
   kaggle_data:
     desc: Download LargeST dataset from Kaggle.
     cmd: kaggle datasets download -d liuxu77/largest -p data/raw && unzip -o 
       data/raw/largest.zip -d data/raw/largest && rm -f data/raw/largest.zip
     outs:
     - data/raw/largest
+  sample_dataset:
+    cmd: cd data/external/LargeST/data && python generate_data_for_training.py 
+      --dataset ca --years 2017 && mv ca/2017 ../../../interim/sample/
+    outs:
+    - data/interim/sample

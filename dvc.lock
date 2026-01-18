@@ -9,3 +9,12 @@ stages:
       md5: 59e4ed196a72231f929d0f5f03e5bc95.dir
       size: 36778352023
       nfiles: 7
+  sample_dataset:
+    cmd: cd data/external/LargeST/data && python generate_data_for_training.py 
+      --dataset ca --years 2017 && mv ca/2017 ../../../interim/sample/
+    outs:
+    - path: data/interim/sample
+      hash: md5
+      md5: 6a0af6cf21e6f461beea7ac0e1bcc69d.dir
+      size: 54007009
+      nfiles: 4
