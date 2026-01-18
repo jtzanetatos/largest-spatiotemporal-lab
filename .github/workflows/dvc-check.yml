@@ -35,12 +35,12 @@ jobs:
 
       - name: DVC doctor
         run: |
-          uv run --with dvc --with dvc-s3 dvc doctor
+          uvx --from dvc --with dvc-s3 dvc doctor
 
       - name: DVC pipeline graph (if dvc.yaml exists)
         run: |
           if [ -f "dvc.yaml" ]; then
-            uv run --with dvc --with dvc-s3 dvc dag
+            uvx --from dvc --with dvc-s3 dvc dag
           else
             echo "No dvc.yaml found, skipping pipeline graph check."
           fi

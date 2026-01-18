@@ -28,12 +28,12 @@ jobs:
 
       - name: Ruff (lint + format check)
         run: |
-          uv run --with ruff ruff check . --output-format=github
-          uv run --with ruff ruff format --check .
+          uvx ruff check . --output-format=github
+          uvx ruff format --check .
 
       - name: Codespell
         run: |
-          uv run --with codespell codespell \
+          uvx codespell \
             --ignore-words-list="nd,teh,fo" \
             --skip=".git,.venv,venv,.mypy_cache,.pytest_cache,.dvc,.idea,.vscode,*.ipynb,*.png,*.jpg,*.jpeg,*.svg,*.ico,models,artifacts,data" \
             .
