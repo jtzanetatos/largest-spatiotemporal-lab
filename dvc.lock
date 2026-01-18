@@ -1,0 +1,11 @@
+schema: '2.0'
+stages:
+  kaggle_data:
+    cmd: kaggle datasets download -d liuxu77/largest -p data/raw && unzip -o 
+      data/raw/largest.zip -d data/raw/largest && rm -f data/raw/largest.zip
+    outs:
+    - path: data/raw/largest
+      hash: md5
+      md5: 59e4ed196a72231f929d0f5f03e5bc95.dir
+      size: 36778352023
+      nfiles: 7
