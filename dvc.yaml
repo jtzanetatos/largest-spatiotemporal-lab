@@ -8,31 +8,38 @@
 
 stages:
   train:
-    desc: "Train via Hydra entrypoint (deterministic run dir for DVC)."
+    desc: Train via Hydra entrypoint (deterministic run dir for DVC).
     cmd: >
       python -m spatiotemporal_lab.cli.train
       hydra.run.dir=outputs/dvc/train
       hydra.job.chdir=false
     deps:
-      - config/
-      - src/spatiotemporal_lab/
-      - pyproject.toml
-      - data/README.md
+    - config/
+    - src/spatiotemporal_lab/
+    - pyproject.toml
+    - data/README.md
     outs:
-      - outputs/dvc/train
+    - outputs/dvc/train
 
   evaluate:
-    desc: "Offline evaluation (optional hook)."
+    desc: Offline evaluation (optional hook).
     cmd: >
       python -m spatiotemporal_lab.cli.train
       evaluation.enabled=true
       hydra.run.dir=outputs/dvc/evaluate
       hydra.job.chdir=false
     deps:
-      - config/
-      - src/spatiotemporal_lab/
-      - pyproject.toml
-      - data/README.md
-      - outputs/dvc/train
+    - config/
+    - src/spatiotemporal_lab/
+    - pyproject.toml
+    - data/README.md
+    - outputs/dvc/train
     outs:
-      - outputs/dvc/evaluate
+    - outputs/dvc/evaluate
+  
+  kaggle_data:
+    desc: Download LargeST dataset from Kaggle.
+    cmd: kaggle datasets download -d liuxu77/largest -p data/raw && unzip -o 
+      data/raw/largest.zip -d data/raw/largest && rm -f data/raw/largest.zip
+    outs:
+    - data/raw/largest
